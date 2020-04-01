@@ -57,7 +57,7 @@
             </div>
             <div ng-if="list_servers.length" >
                 <input type="text" ng-model="text_search" class="form-control" placeholder="Search server...">
-                <div style="margin-top: 10px;" class="row">
+                <div style="margin-top: 20px;" class="row">
                     <div class="col-3" ng-repeat="server in list_servers|filter:text_search">
                         <a href="/chat/chatroom/{$ server.name $}/" class="btn btn-light btn-lg btn-block"  style="text-align: left; line-height: 1.1">
                             {$ server.name $}

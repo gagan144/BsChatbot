@@ -29,6 +29,14 @@
             margin: 0px 10px 10px 0px;
         }
 
+        .alink{
+            color: white !important;
+        }
+        .alink:hover{
+            color: white !important;
+            text-decoration: underline;
+        }
+
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
             display: none !important;
         }
@@ -44,6 +52,10 @@
     </script>
 </head>
 <body translate="no" ng-app="ChatApp" ng-controller="MainCtrl" ng-cloak onbeforeunload="return onbeforeunload_page()">
+
+    <a href="{% url 'home' %}" class="btn btn-info btn-lg" style="position: fixed; top: 20px; left: 20px;">
+        <i class="fa fa-arrow-left"></i>
+    </a>
 
     <div class="chat_container clearfix">
         <div class="chat" style="width: 100% !important; border-radius: 5px !important;">
@@ -83,11 +95,21 @@
         </div>
         <div class="message" ng-class="{'other-message float-right': msg.source=='user', 'my-message':  msg.source=='response'}" ng-switch="msg.type">
             <div ng-switch-when="text">{$ ::msg.data $}</div>
-            <div ng-switch-when="google_search">{$ ::msg.data $}</div>
-            <div ng-switch-when="search_history">
-                <div ng-if="!msg.data.length">No search history found!</div>
+            <div ng-switch-when="google_search">
+                <div ng-if="!msg.data.length">No results found in google for '{$ ::msg.query $}'!</div>
                 <div ng-if="msg.data.length">
-                    Following are your search history:<br/>
+                    Top google results for '{$ ::msg.query $}':<br/>
+                    <ul style="margin-left: 20px;">
+                        <li ng-repeat="row in msg.data">
+                            <a ng-href="{$ ::row.url $}" class="alink" target="_blank">{$ ::row.url $}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-switch-when="search_history">
+                <div ng-if="!msg.data.length">No search history found for '{$ ::msg.query $}'!</div>
+                <div ng-if="msg.data.length">
+                    Search history for '{$ ::msg.query $}':<br/>
                     <span class="badge badge-pill badge-light search_history" ng-repeat="hist in msg.data">{$ hist.search_text $}</span>
                 </div>
             </div>

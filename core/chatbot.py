@@ -1,3 +1,5 @@
+from googlesearch import search
+
 from core.models import *
 
 
@@ -30,10 +32,11 @@ class IntentBasedChatBot:
         search_text = " ".join(msg.split()[1:])
 
         # Search via google api
-        data = [
-            {"title": "dummy", "url":"http://path/to/url"},
-            {"title": "dummy2", "url":"http://path/to/url2"},
-        ]
+        data = []
+        for result in search(query=search_text, num=10, stop=5):
+            data.append({
+                "url": result
+            })
 
         # Save in database
         hist = SearchHistory.objects.create(
@@ -44,6 +47,7 @@ class IntentBasedChatBot:
 
         return {
             "type": "google_search",
+            "query": search_text,
             "data": data
         }
 
@@ -59,6 +63,7 @@ class IntentBasedChatBot:
 
         return {
             "type": "search_history",
+            "query": search_text,
             "data": data
         }
 
