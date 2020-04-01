@@ -7,10 +7,12 @@ db.sqlite3
 media
 *.google-cookie
 
+
 # Backup files #
 *.bak
 
 # If you are using PyCharm #
+.idea/*
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
@@ -84,6 +86,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+activate_env.bat
 
 # mkdocs documentation
 /site
