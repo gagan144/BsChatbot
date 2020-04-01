@@ -10,7 +10,7 @@ class ChatServer(models.Model):
     name    = models.SlugField(max_length=50, unique=True, db_index=True, help_text='Unique name of the server.')
     user    = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True, help_text='User that created this server.')
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, help_text='Timestamp at which this record was created.')
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, help_text='Timestamp at which this record was created.')
     modified_on = models.DateTimeField(null=True, blank=True, editable=False, help_text='TImestamp at which this record was last modified.')
 
     class Meta:
@@ -47,11 +47,12 @@ class SearchHistory(models.Model):
 
     search_text = models.CharField(max_length=255, db_index=True, help_text='Search query text.')
 
-    created_on = models.DateTimeField(auto_now_add=True, editable=False, help_text='Timestamp at which this record was created.')
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, db_index=True, help_text='Timestamp at which this record was created.')
 
     class Meta:
         verbose_name = 'Search History'
         verbose_name_plural = 'Search Histories'
+        ordering = ('-created_on',)
 
     def __str__(self):
         return "{} - {}".format(self.id, self.search_text)

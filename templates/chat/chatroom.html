@@ -6,10 +6,12 @@
     <title>{{ chat_server.name }} | BlueStacks ChatBot</title>
     <link rel="icon" href="{% get_static_prefix %}images/favicon.png">
 
+    <link href="{% get_static_prefix %}bootstrap/css/bootstrap.min.css" rel="stylesheet" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 {#    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'>#}
     <link rel='stylesheet' href='{% get_static_prefix %}libs/font-awesome-4.7.0/css/font-awesome.min.css'>
     <link rel='stylesheet' href='{% get_static_prefix %}css/chatroom.css'>
+
 
     <style>
         .myavatar{
@@ -18,6 +20,13 @@
             border: solid 2px #5dba69;
             border-radius: 9999px;
             background-color: white;
+        }
+
+        .search_history {
+            font-size: 14px;
+            padding: 5px 10px;
+            font-weight: inherit;
+            margin: 0px 10px 10px 0px;
         }
 
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -34,15 +43,15 @@
         }
     </script>
 </head>
-<body translate="no" ng-app="ChatApp" ng-controller="MainCtrl" ng-cloak>
+<body translate="no" ng-app="ChatApp" ng-controller="MainCtrl" ng-cloak onbeforeunload="return onbeforeunload_page()">
 
-    <div class="container clearfix">
+    <div class="chat_container clearfix">
         <div class="chat" style="width: 100% !important; border-radius: 5px !important;">
             <div class="chat-header clearfix">
                 <img src="{% get_static_prefix %}images/chatbot_icon.png"  class="myavatar" alt="avatar" />
                 <div class="chat-about">
                     <div class="chat-with">Server: {{ chat_server.name }}</div>
-                    <div class="chat-num-messages">Chat with BlueStacks Bot</div>
+                    <div class="chat-num-messages">Chat with <span style="font-weight: bold;">{{ bot.NAME }}</span> - BlueStacks ChatBot</div>
                 </div>
                 <i class="fa fa-star"></i>
             </div>
@@ -72,8 +81,17 @@
             <span class="message-data-time" >{$ ::msg.datetime|date:'hh:mm a' $}, Today</span> &nbsp; &nbsp;
             <span class="message-data-name" >{$ ::msg.user.name $}</span> <i class="fa fa-circle" ng-class="{'me': msg.source=='user', 'online':  msg.source=='response'}"></i>
         </div>
-        <div class="message" ng-class="{'other-message float-right': msg.source=='user', 'my-message':  msg.source=='response'}">
-            {$ ::msg.message $}
+        <div class="message" ng-class="{'other-message float-right': msg.source=='user', 'my-message':  msg.source=='response'}" ng-switch="msg.type">
+            <div ng-switch-when="text">{$ ::msg.data $}</div>
+            <div ng-switch-when="google_search">{$ ::msg.data $}</div>
+            <div ng-switch-when="search_history">
+                <div ng-if="!msg.data.length">No search history found!</div>
+                <div ng-if="msg.data.length">
+                    Following are your search history:<br/>
+                    <span class="badge badge-pill badge-light search_history" ng-repeat="hist in msg.data">{$ hist.search_text $}</span>
+                </div>
+            </div>
+
         </div>
     </script>
     <!-- ----- /Templates ----- -->
@@ -84,6 +102,11 @@
     <script src="{% get_static_prefix %}libs/angualrjs/1.6.1/angular.min.js"></script>
     <script src="{% get_static_prefix %}libs/angualrjs/1.6.1/angular-cookies.js"></script>
 
+    <script>
+        function onbeforeunload_page(){
+            return "";
+        }
+    </script>
     <script>
         var APP = angular.module('ChatApp', [
             'ngCookies',
@@ -107,7 +130,9 @@
                 postmessage: null
             };
             $scope.message_to_send = "";
-            $scope.list_messages = [];
+            $scope.list_messages = [
+
+            ];
 
             function _scrollChatToBottom(){
                 $timeout(function(){
@@ -133,7 +158,7 @@
                     },
                     "type": "text",
                     "source": "user",
-                    "message": message,
+                    "data": message,
                     "datetime": moment().utc().format("YYYY-MM-DDTHH:mm:ssZ")
                 });
                 $scope.message_to_send = "";

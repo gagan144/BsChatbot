@@ -7,6 +7,7 @@ from django.utils import timezone
 import uuid
 
 from core.models import *
+from core.chatbot import IntentBasedChatBot
 
 
 @login_required
@@ -29,9 +30,11 @@ def chatroom(request, chat_server_name):
     """
 
     chat_server = ChatServer.objects.get(name=chat_server_name)
+    bot = IntentBasedChatBot()
 
     data = {
-        "chat_server": chat_server
+        "chat_server": chat_server,
+        "bot": bot
     }
     return render(request, 'chat/chatroom.html', data)
 
@@ -50,16 +53,22 @@ def post_message(request):
     user = request.user
     chat_server = ChatServer.objects.get(id=server_id)
 
-    message_reply = {
+    # Process message
+    bot = IntentBasedChatBot()
+    message_reply = bot.process(
+        message = message,
+        chatserver = chat_server,
+        user = user
+    )
+
+    message_reply.update({
         "id": str(uuid.uuid4()),
-        "user":{
-            "username": "bs_chatbot",
-            "name": "BlueStacks Bot"
+        "user": {
+            "username": bot.USERNAME,
+            "name": bot.NAME
         },
-        "type": "text",
-        "message": "Bot reply - {}".format(message),
         "datetime": timezone.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-    }
+    })
 
     return JsonResponse({
         "status": "success",
