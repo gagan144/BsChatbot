@@ -20,19 +20,38 @@
                 <h3 class="modal-title" id="modal-title">Add new Chat Server</h3>
             </div>
             <div class="modal-body" id="modal-body">
-                <form novalidate>
+                <form name="form_addNewServer" novalidate>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Chat server name:</label>
-                        <input type="text" class="form-control" >
-                        <small id="emailHelp" class="form-text text-muted">
-                            This should be unique name.
+                        <label for="fld_servername">Chat server name:</label>
+                        <input type="text" ng-model="data.name" id="fld_servername" class="form-control" pattern="^[a-zA-Z0-9]+[a-zA-Z0-9\-\_]*" required>
+                        <small class="form-text text-muted">
+                            This should be a unique name consisting of letters, numbers, underscores or hyphens only.
                         </small>
+                    </div>
+
+                    <div ng-if="errors" class="alert alert-danger" style="font-size: small; line-height: 1.1;">
+                        <p style="margin-bottom: 10px;">Error creating server:</p>
+                        <ul style="margin-left: 10px;margin-bottom: 0px;">
+                            <li ng-repeat="err in errors.name">{$ err $}</li>
+                        </ul>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" ng-click="close()">Cancel</button>
-                <button class="btn btn-primary" type="button" ng-click="add()">Create</button>
+                <div class="float-left text-danger" ng-if="ui_flags.create=='error'">
+                    <i class="fa fa-exclamation-triangle"></i> Something went wrong!
+                </div>
+
+                <div ng-show="ui_flags.create!='loading'">
+                    <button class="btn btn-secondary" type="button" ng-click="close()">Cancel</button>
+                    <button class="btn btn-primary" type="button" ng-click="create_server(form_addNewServer)" ng-disabled="form_addNewServer.$invalid">Create</button>
+                </div>
+                <div ng-if="ui_flags.create=='loading'">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    &nbsp;<span style="font-size: 20px;">Creating Server...</span>
+                </div>
             </div>
         </script>
         <!-- ----- /Templates ----- -->
@@ -105,8 +124,45 @@
                     templateUrl: 'tmpl_modal_addServer',
                     backdrop : 'static',
                     size: 'lg',
-                    controller: function($scope, $uibModalInstance){
+                    controller: function($scope, $uibModalInstance, $http, $window){
+                        $scope.ui_flags = {
+                            create: null
+                        };
+                        $scope.errors = null;
+
                         $scope.data = {};
+
+
+                        $scope.create_server = function(formobj){
+                            if(formobj.$invalid){
+                                return null;
+                            }
+
+                            // Post
+                            $scope.ui_flags.create = "loading";
+                            $scope.errors = null;
+                            $http({
+                                method: 'POST',
+                                url: '{% url 'core__chatserver_create' %}',
+                                data: $.param($scope.data)
+                            }).then(
+                                function(response){
+                                    var responseData = response.data;
+
+                                    if(responseData.status == 'success'){
+                                        $window.location.reload()
+                                    }else{
+                                        $scope.ui_flags.create = null;
+                                        $scope.errors = responseData.errors;
+                                    }
+
+                                },
+                                function(responseError){
+                                    $scope.ui_flags.create = "error";
+                                }
+                            );
+
+                        };
 
                         $scope.close = function(){
                             $uibModalInstance.dismiss('cancel');

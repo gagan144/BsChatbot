@@ -7,6 +7,7 @@ from django.utils import timezone
 import uuid
 
 from core.models import *
+from core.forms import ChatServerForm
 from core.chatbot import IntentBasedChatBot
 
 
@@ -18,7 +19,7 @@ def home(request):
 
     data = {
         # This could be a tastypie resource. But as of now, we are passing it through django template
-        'list_servers': ChatServer.objects.filter(user=request.user)
+        'list_servers': ChatServer.objects.filter(user=request.user).order_by('-created_on')
     }
     return render(request, 'home.html', data)
 
@@ -76,5 +77,32 @@ def post_message(request):
     })
 
 
+@login_required
+@require_http_methods(["POST"])
+def chatserver_create(request):
+    """
+    View to create new chat server.
+    """
+
+    data = {
+        "name": request.POST['name'],
+        "user": request.user
+    }
+
+    form_new_server = ChatServerForm(data)
+
+    if form_new_server.is_valid():
+        chatserver = form_new_server.save()
+        return JsonResponse({
+            "status": "success",
+            "message": "Ok"
+        })
+    else:
+        errors = dict(form_new_server.errors)
+        return JsonResponse({
+            "status": "failed",
+            "message": "Please correct marked errors.",
+            "errors": errors
+        })
 
 
