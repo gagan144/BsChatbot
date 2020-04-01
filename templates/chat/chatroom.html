@@ -19,6 +19,10 @@
             border-radius: 9999px;
             background-color: white;
         }
+
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
     </style>
 
     <script>
@@ -30,7 +34,7 @@
         }
     </script>
 </head>
-<body translate="no" ng-app="ChatApp" ng-controller="MainCtrl">
+<body translate="no" ng-app="ChatApp" ng-controller="MainCtrl" ng-cloak>
 
     <div class="container clearfix">
         <div class="chat" style="width: 100% !important; border-radius: 5px !important;">
@@ -49,6 +53,9 @@
 
                 <div ng-if="ui_flags.postmessage" >
                     <img ng-if="ui_flags.postmessage=='loading'" src="{% get_static_prefix %}images/loaders/loader_typing.gif" style="height: 10px;">
+                    <div ng-if="ui_flags.postmessage=='error'" class="alert alert-danger" style="color: red;">
+                        <i class="fa fa-exclamation-triangle"></i>&nbsp;&nbsp;Error sending message! Try again.
+                    </div>
                 </div>
 
             </div>
@@ -119,6 +126,7 @@
                 }
 
                 $scope.list_messages.push({
+                    "id": moment().toDate().getTime(),
                     "user":{
                         "username": "{{ request.user.username }}",
                         "name": "{{ request.user.first_name }} {{ request.user.last_name }}"

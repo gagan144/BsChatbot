@@ -4,6 +4,7 @@ from django.shortcuts import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+import uuid
 
 from core.models import *
 
@@ -50,6 +51,7 @@ def post_message(request):
     chat_server = ChatServer.objects.get(id=server_id)
 
     message_reply = {
+        "id": str(uuid.uuid4()),
         "user":{
             "username": "bs_chatbot",
             "name": "BlueStacks Bot"
