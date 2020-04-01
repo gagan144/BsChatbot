@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'BsChatbot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bschatbot',
-        'USER': 'postgres',
-        'PASSWORD': '!root1234@',
-        'HOST': '127.0.0.1',
+        'NAME': 'd680r8vh03ihm9',
+        'USER': 'rhnkddfobxgyzx',
+        'PASSWORD': 'b4e4c509db7a0f7aabfce59f22a0c56da8d48e90e5811890afb4cccf0499e879',
+        'HOST': 'ec2-18-210-51-239.compute-1.amazonaws.com',
         'PORT': 5432
     }
     # 'default': {
