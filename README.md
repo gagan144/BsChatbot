@@ -37,11 +37,24 @@ Submission for BlueStacks [backend-developer-challenge](https://github.com/blues
 
 ## Database Design
 
+- Model implementation: [core/models.py](core/models.py)
+- ER Diagram:
+
+    ![DB](_docs/images/database_er_diagram.png)
 
 ## Chat Bot
 
 - Bot implementation: [core/chatbot.py](core/chatbot.py)
 - Message posting API: Method `post_message(request)` in [core/views.py](core/views.py)
+
+
+## Screenshots
+
+|    |   |
+|---|---|
+| ![](_docs/images/screenshot_login.png)   | ![](_docs/images/screenshot_home.png)  |
+| ![](_docs/images/screenshot_addServer.png)  | ![](_docs/images/screenshot_chat.png)  |
+| ![](_docs/images/screenshot_admin.png)  |   |
 
 
 ## Submitted By
