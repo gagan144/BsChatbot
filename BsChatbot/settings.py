@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'bschatbot',
         'USER': 'postgres',
-        'PASSWORD': 'pass',
+        'PASSWORD': '!root1234@',
         'HOST': '127.0.0.1',
         'PORT': 5432
     }
