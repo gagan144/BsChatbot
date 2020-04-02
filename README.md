@@ -15,6 +15,10 @@ Submission for BlueStacks [backend-developer-challenge](https://github.com/blues
 - Create virtual environment
 - Activate virtual environment
 - Clone project
+- Install project dependencies ([requirements.txt](requirements.txt))
+    ```cmd
+    pip install -r requirements.txt
+    ```
 - Edit database settings in `settings.py`
 - Run database migrations:
     ```cmd
