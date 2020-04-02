@@ -14,7 +14,7 @@ class IntentBasedChatBot:
 
     def __init__(self):
         self.INTENTS = {
-            "hey": self.action_hey,
+            "hi": self.action_hey,
             "!google": self.action_googleSearch,
             "!recent": self.action_searchHistory,
         }
@@ -25,7 +25,7 @@ class IntentBasedChatBot:
     def action_hey(self, msg, chatserver, user):
         return {
             "type": "text",
-            "data": "hi"
+            "data": "hey"
         }
 
     def action_googleSearch(self, msg, chatserver, user):
