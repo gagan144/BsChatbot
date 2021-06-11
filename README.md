@@ -63,7 +63,6 @@ Submission for BlueStacks [backend-developer-challenge](https://github.com/blues
 
 ## Submitted By
 - Gagandeep Singh
-- Mobile No: +91 9717568636
 - Email: singh.gagan144@gmail.com
 - Date: April, 2020
 
